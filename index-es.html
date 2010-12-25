@@ -1,0 +1,166 @@
+---
+layout: reference
+---
+<div class="box">
+  <h2>Introducci&oacute;n a Referencia de Git </h2>
+  <!-- <h2>Introduction to the Git Reference</h2> -->
+  <div class="block">
+    <p>
+    Este es el sitio de referencia de Git. Esto pretende ser una
+    r&aacute;pida referencia para aprender y recordar los comandos de
+    Git m&aacute;s importantes y frecuentes. Los comandos est&aacute;n organizados
+    en secciones según el tipo de operaci&oacute;n que puedas estar
+    intentado realizar, y presentar&aacute; las opciones y comandos frecuentes
+    necesarios para lograr esas tareas frecuentes.
+    <!-- This is the Git reference site. This is meant to be a quick
+    reference for learning and remembering the most important and
+    commonly used Git commands.  The commands are organized into
+    sections of the type of operation you may be trying to do, and
+    will present the common options and commands needed to accomplish
+    these common tasks. -->
+    </p>
+    <p>
+    Cada secci&oacute;n enlazar&aacute; a la siguiente secci&oacute;n, por lo que puede
+    usarse como un tutorial. Cada p&aacute;gina tambi&eacute;n enlazar&aacute; a documentaci&oacute;n
+    m&aacute;s exhaustiva como p&aacute;ginas del manual oficial y secciones
+    relevantes del <a href="http://progit.org">libro Pro Git</a>,
+    para que puedas aprender m&aacute;s de cualquier comando. Primero,
+    empezaremos con pensar acerca de la gesti&oacute;n del c&oacute;digo fuente
+    como Git lo hace.
+    <!-- Each section will link to the next section, so it can be used
+    as a tutorial.  Every page will also link to more in-depth
+    Git documentation such as the offical manual pages and relevant
+    sections in the <a href="http://progit.org">Pro Git book</a>, 
+    so you can learn more about any of 
+    the commands. First, we'll start with thinking about source code 
+    management like Git does. -->
+    </p>
+  </div>
+</div>
+
+<div class="box">
+  <h2>C&oacute;mo pensar como Git</h2>
+  <!-- <h2>How to Think Like Git</h2> -->
+  <div class="block">
+    <p>
+    La primera cosa que es importante entender acerca de Git es que
+    piensa acerca del control de versiones de manera muy diferente
+    a Subversion o Perforce o cualquier SCM al que puedas estar habituado.
+    Es usualmente m&aacute;s f&aacute;cil aprender Git intentando olvidar tus 
+    suposiciones acerca de c&oacute;mo el control de versiones funciona e intentar
+    pensar acerca de ello a la manera de Git.
+    <!-- This first thing that is important to understand about Git is
+    that it thinks about version control very differently than 
+    Subversion or Perforce or whatever SCM you may be used to. It
+    is often easier to learn Git by trying to forget your assumptions
+    about how version control works and try to think about it in the
+    Git way. -->
+    </p>
+
+    <p>
+    Empecemos desde cero. Sup&oacute;n que est&aacute;s diseñando un nuevo sistema de
+    gesti&oacute;n de c&oacute;digo fuente. ¿C&oacute;mo har&iacute;as un control de versiones b&aacute;sico
+    antes de haber usado una herramienta para ello? Lo m&aacute;s probable es que
+    simplemente copiases el directorio de tu proyecto para guardar c&oacute;mo
+    se ve en ese momento.
+    <!-- Let's start from scratch.  Assume you are designing a new source 
+    code management system.  How did you do basic version control before
+    you used a tool for it?  Chances are that you simply copied your 
+    project directory to save what it looked like at that point. -->
+    </p>
+
+    <pre> $ cp -R project project.bak </pre>
+
+    <p>
+    De esta forma, puedes f&aacute;cilmente revertir ficheros que puedan haberse
+    estropeado m&aacute;s tarde, o ver qu&eacute; has cambiado comparando c&oacute;mo se ve el
+    proyecto ahora a c&oacute;mo se ve&iacute;a cuando lo copiaste.
+    <!-- That way, you can easily revert files that get messed up later, or 
+    see what you have changed by comparing what the project looks like
+    now to what it looked like when you copied it. -->
+    </p>
+
+    <p>
+    Si eres realmente paranoico, har&aacute;s esto a menudo, puede que insertando
+    la fecha en el nombre de la copia de seguridad.
+    <!-- If you are really paranoid, you may do this often, maybe putting the
+    date in the name of the backup: -->
+    </p>
+
+    <pre> $ cp -R project project.2010-06-01.bak </pre>
+
+    <p>
+    In ese caso, puedes tener un mont&oacute;n de instant&aacute;neas de tu proyecto desde
+    las que comparar e inspeccionar. Puedes incluso usar este modelo para 
+    compartir efectivamente cambios con alguien. Si comprimes tu proyecto 
+    en un estado conocido y lo pones en tu sitio web, otros desarrolladores 
+    puede descargarlo, cambiarlo y enviarte un parche f&aacute;cilmente.
+    <!-- In that case, you may have a bunch of snapshots of your project that 
+    you can compare and inspect from. You can even use this model to 
+    fairly effectively share changes with someone.  If you zip up your
+    project at a known state and put it on your website, other developers
+    can download that, change it and send you a patch pretty easily. -->
+    </p>
+
+    <pre>
+ $ wget http://sample.com/project.2010-06-01.zip
+ $ unzip project.2010-06-01.zip
+ $ cp -R project.2010-06-01 project-my-copy
+ $ cd project-my-copy
+ $ (change something)
+ $ diff project-my-copy project.2010-06-01 > change.patch
+ $ (email change.patch)</pre>
+
+    <p>
+    Ahora el desarrollador original puede aplicar ese parche a su copia del
+    proyecto y tener los cambios. As&iacute; es c&oacute;mo muchos proyectos de c&oacute;digo libre
+    han estado colaborando durante varios años.
+    <!-- Now the original developer can apply that patch to their copy of the
+    project and they have your changes. This is how many open source 
+    projects have been collaborated on for several years. -->
+    </p>
+
+    <p>
+    En realidad, esto funciona bastante bien, as&iacute; que digamos que queremos
+    escribir una herramienta para hacer este proceso b&aacute;sico m&aacute;s r&aacute;pido y
+    sencillo. En lugar de escribir una herramienta que versione cada fichero
+    individualmente, como Subversion, probablemente escribir&iacute;amos uno que haga
+    m&aacute;s sencillo almacenar instant&aacute;neas de nuestro proyecto sin tener
+    que copiar el proyecto entero cada vez.
+    <!-- This actually works fairly well, so let's say we want to write a tool
+    to make this basic process faster and easier.  Instead of writing a tool
+    that versions each file individually, like Subversion, we would probably
+    write one that makes it easier to store snapshots of our project without
+    having to copy the whole directory each time. -->
+    </p>
+
+    <p>
+    Esto es ensencialmente lo que hace Git. Puedes decirle a Git que tu quieres
+    guardar una instant&aacute;nea de tu proyecto con el comando <code>git commit</code>
+    y eso b&aacute;sicamente registra un manifiesto de c&oacute;mo se ve tu proyecto en ese
+    punto. Entonces la mayor&iacute;a de los comandos trabajan con esos manifiestos para
+    ver c&oacute;mo difieren o extraer contenido de ellos, etc.
+    <!-- This is essentially what Git is. You tell Git you want to save a snapshot
+    of your project with the <code>git commit</code> command and it basically 
+    records a manifest of what all of the files in your project look like at 
+    that point.  Then most of the commands work with those manifests to see
+    how they differ or pull content out of them, etc.  -->
+    </p>
+
+    <center><img src="./images/snapshots.png"/></center>
+
+    <p>
+    Si piensas acerca de Git como una herramienta para almacenar y comparar y
+    unir instant&aacute;neas de tu proyecto, puede ser m&aacute;s sencillo para entender qu&eacute;
+    es lo que est&aacute; pasando y c&oacute;mo hacer las cosas adecuadamente.
+    <!-- If you think about Git
+    as a tool for storing and comparing and merging snapshots of your project,
+    it may be easier to understand what is going on and how to do things 
+    properly. -->
+    </p>
+
+  </div>
+</div>
+
+<p><a href="/creating">On to Getting and Creating Projects &#187;</a></p>
+<!-- <p><a href="/creating">On to Getting and Creating Projects &#187;</a></p> -->
