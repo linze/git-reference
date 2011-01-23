@@ -1,0 +1,603 @@
+---
+layout: reference
+---
+
+<div class="box">
+  <h2>
+    <span class="docs">
+      <a target="new" href="http://progit.org/book/ch2-3.html">libro</a>
+      <!-- <a target="new" href="http://progit.org/book/ch2-3.html">book</a> -->
+    </span>
+    Inspeción y Comparación
+    <!-- Inspection and Comparison -->
+  </h2>
+  <div class="block">
+    <p>
+    Así que ahora tienes un montón de ramas que usas para asuntos de vida corta,
+    características de vida larga y otras cosas. ¿Cómo haces un seguimiento de ellas?
+    Git tiene un par de herramientas que te ayudarán a averiguar dónde se ha trabajado,
+    cuales son las diferencias entre dos ramas y más.
+    <!-- So now you have a bunch of branches that you are using for short lived
+    topics, long lived features and what not.  How do you keep track of them?
+    Git has a couple of tools to help you figure out where work was done, what
+    the difference between two branches are and more. -->
+    </p>
+
+    <!-- TODO: Incomplete
+        What are the translation of "nutshell" and "history"? -->
+    <p class="nutshell">
+    <b>In a nutshell</b> puedes usar <code>git log</code> para encontrar commits
+    especificos en la historia del proyecto - por autor, fecha, contenido o historia.
+    Puedes usar <code>git diff</code> para comparar dos puntos diferentes en tu historia -
+    generalmente para ver cómo difieren dos ramas o qué ha cambiado desde una versión de tu
+    software a otra.
+    <!-- <b>In a nutshell</b> you can use <code>git log</code> to find specific
+    commits in your project history - by author, date, content or
+    history.  You can use <code>git diff</code> to compare two different points
+    in your history - generally to see how two branches differ or what has
+    changed from one version of your software to another. -->
+    </p>
+  </div>
+</div>
+
+<div class="box">
+  <h2>
+    <span class="docs">
+      <a target="new" href="http://www.kernel.org/pub/software/scm/git/docs/git-log.html">documentación</a> &nbsp;
+      <a target="new" href="http://progit.org/book/ch2-3.html">libro</a>
+      <!-- <a target="new" href="http://www.kernel.org/pub/software/scm/git/docs/git-log.html">docs</a> &nbsp;
+      <a target="new" href="http://progit.org/book/ch2-3.html">book</a> -->
+    </span>
+    <a name="log">git log</a>
+    <!-- FIXME: History -->
+    <span class="desc">Filtra tu historia de commits</span>
+    <!-- <span class="desc">filter your commit history</span> -->
+  </h2>
+
+  <div class="block">
+    <p>
+    Hemos visto como usar <code>git log</code> para comparar ramas, buscando los
+    commits de una rama que no son alcanzables desde otra. (Si no te acuerdas, tenía
+    un aspecto como <code>git log branchA ^branchB</code>. Sin embargo, también puedes
+    usar <code>git log</code> para buscar commits especificos. Aquí estaremos buscando
+    con alguna de las opciones más comunes de <code>git log</code>, pero hay muchas. Echa
+    un vistazo a la documentación oficial para obtener la lista completa.
+    <!--We've already seen how to use <code>git log</code> to compare branches,
+    by looking at the commits on one branch that are not reachable from another.
+    (If you don't remember, it looks like this: <code>git log branchA ^branchB</code>.
+    However, you can also use <code>git log</code> to look for specific commits.
+    Here we'll be looking at some of the more commonly used <code>git log</code>
+    options, but there are many.  Take a look at the official docs for the whole
+    list. -->
+    </p>
+
+    <h4>
+      git log --author
+      <small>busca únicamente commits de un autor específico</small>
+      <!-- <small>look for only commits from a specific author</small> -->
+    </h4>
+
+    <p>
+    <!-- FIXME: History -->
+    <!-- TODO: Check if translate [number] -->
+    Para filtrar tu historia de commits por los realizados por un autor específico,
+    puedes usar la opción <code>--author</code>. Por ejemplo, digamos que estamos
+    buscando los commits en el código fuente de Git realizados por Linus. Podríamos
+    escribir algo como <code>git log --author=Linus</code>. La búsqueda es sensible
+    a mayúsculas y también buscará en la dirección de correo electrónico. Haré el
+    ejemplo usando la opción <code>-[number]</code>, la cual limitará los resultados
+    a los últimos [number] commits.
+    <!-- To filter your commit history to only the ones done by a specific author,
+    you can use the <code>--author</code> option.  For example, let's say we're
+    looking for the commits in the Git source code done by Linus.  We would
+    type something like <code>git log --author=Linus</code>. The search is
+    case sensitive and also will search the email address.  I'll do the
+    example using the <code>-[number]</code> option, which will limit the
+    results to the last [number] commits. -->
+    </p>
+
+<pre>
+<b>$ git log --author=Linus --oneline -5</b>
+81b50f3 Move 'builtin-*' into a 'builtin/' subdirectory
+3bb7256 make "index-pack" a built-in
+377d027 make "git pack-redundant" a built-in
+b532581 make "git unpack-file" a built-in
+112dd51 make "mktag" a built-in
+</pre>
+
+    <h4>
+      git log --since --before
+      <!-- TODO: Check "autoría". It's well said? -->
+      <small>filtra commits por la fecha de autoría</small>
+      <!-- <small>filter commits by date authored</small> -->
+    </h4>
+
+    <p>
+    Si quieres especificar un rango de fechas hasta el que estás interesado en filtrar
+    tus commits, puedes usar una serie de opciones - Yo uso <code>--since</code> y
+    <code>--before</code>. Por ejemplo, si quiero ver todos los commits en el proyecto
+    Git antes de hace 3 semanas, pero después del 18 de abril, podría ejecutar esto:
+    <!-- If you want to specify a date range that you're interested in filtering your
+    commits down to, you can use a number of options - I use <code>--since</code>
+    and <code>--before</code>, but you can also use <code>--until</code> and
+    <code>--after</code>.  For example, if I wanted to see all the commits in
+    the Git project before 3 weeks ago but after April 18th, I could run this
+    (I'm also going to use <code>--no-merges</code> to remove merge commits): -->
+    </p> 
+
+<pre>
+<b>$ git log --oneline --before={3.weeks.ago} --after={2010-04-18} --no-merges</b>
+5469e2d Git 1.7.1-rc2
+d43427d Documentation/remote-helpers: Fix typos and improve language
+272a36b Fixup: Second argument may be any arbitrary string
+b6c8d2d Documentation/remote-helpers: Add invocation section
+5ce4f4e Documentation/urls: Rewrite to accomodate transport::address
+00b84e9 Documentation/remote-helpers: Rewrite description
+03aa87e Documentation: Describe other situations where -z affects git diff
+77bc694 rebase-interactive: silence warning when no commits rewritten
+636db2c t3301: add tests to use --format="%N"
+</pre>
+
+    <h4>
+      git log --grep
+      <small>filtra commits por el mensaje de commit</small>
+      <!-- <small>filter commits by commit message</small> -->
+    </h4>
+
+    <p>
+      También puedes buscar commits con una frase específica en el mensaje de commit.
+      Puedes usar <code>--grep</code> para eso. Digamos que conozco que hay un commit
+      que trataba del uso de la variable de entorno P4EDITOR y quiero recordar qué
+      aspecto tenía el cambio - Puedo encontrar el commit con <code>--grep</code>.
+      <!-- You may also want to look for commits with a certain phrase in the commit
+      message.  You can use <code>--grep</code> for that.  Let's say I knew there
+      was a commit that dealt with using the P4EDITOR environment variable and
+      I wanted to remember what that change looked like - I could find the commit
+      with <code>--grep</code>. -->
+    </p>
+
+<pre>
+<b>$ git log --grep=P4EDITOR --no-merges</b>
+<span class="yellow">commit 82cea9ffb1c4677155e3e2996d76542502611370</span>
+Author: Shawn Bohrer
+Date:   Wed Mar 12 19:03:24 2008 -0500
+
+    git-p4: Use P4EDITOR environment variable when set
+
+    Perforce allows you to set the P4EDITOR environment variable to your
+    preferred editor for use in perforce.  Since we are displaying a
+    perforce changelog to the user we should use it when it is defined.
+
+    Signed-off-by: Shawn Bohrer <shawn.bohrer@gmail.com>
+    Signed-off-by: Simon Hausmann <simon@lst.de>
+</pre>
+
+    <p>
+    <!-- TODO: Complete -->
+    Git 
+    <!-- Git will logically OR all <code>--grep</code> and <code>--author</code>
+    arguments.  If you want to use <code>--grep</code> and <code>--author</code>
+    to see commits that were authored by someone AND have a specific message
+    content, you have to add the <code>--all-match</code> option. In these
+    examples, I'm going to use the <code>--format</code> option, so we can see
+    who the author of each commit was. -->
+    </p>
+
+    <p>Si yo buscara por el mensaje de commit con 'p4 depo' en él, obtendría estos
+    tres commits:</p>
+    <!-- <p>If I look for the commit messages with 'p4 depo' in them, I get these
+    three commits:</p> -->
+
+<pre>
+<b>$ git log --grep="p4 depo" --format="%h %an %s"</b>
+ee4fd1a Junio C Hamano Merge branch 'master' of git://repo.or.cz/git/fastimport
+da4a660 Benjamin Sergeant git-p4 fails when cloning a p4 depo.
+1cd5738 Simon Hausmann Make incremental imports easier to use by storing the p4 d
+</pre>
+
+    <!-- TODO: Complete -->
+    <p>Si añado el argumento <code>--author=Hausmann</code>, en lugar de filtrar hacia
+    más abajo 
+    <!-- <p>If I add a <code>--author=Hausmann</code> argument, instead of further
+    filtering it down to the one commit by Simon, it instead will show me all
+    commits by Simon OR commits with "p4 depo" in the message:</p> -->
+
+<pre>
+<b>$ git log --grep="p4 depo" --format="%h %an %s" --author="Hausmann"</b>
+cdc7e38 Simon Hausmann Make it possible to abort the submission of a change to Pe
+f5f7e4a Simon Hausmann Clean up the git-p4 documentation
+30b5940 Simon Hausmann git-p4: Fix import of changesets with file deletions
+4c750c0 Simon Hausmann git-p4: git-p4 submit cleanups.
+0e36f2d Simon Hausmann git-p4: Removed git-p4 submit --direct.
+edae1e2 Simon Hausmann git-p4: Clean up git-p4 submit's log message handling.
+4b61b5c Simon Hausmann git-p4: Remove --log-substitutions feature.
+36ee4ee Simon Hausmann git-p4: Ensure the working directory and the index are cle
+e96e400 Simon Hausmann git-p4: Fix submit user-interface.
+38f9f5e Simon Hausmann git-p4: Fix direct import from perforce after fetching cha
+2094714 Simon Hausmann git-p4: When skipping a patch as part of "git-p4 submit" m
+1ca3d71 Simon Hausmann git-p4: Added support for automatically importing newly ap
+...
+</pre>
+
+    <p>Sin embargo, si incluyo <code>--all-match</code>, obtengo los resultados
+    que estoy buscando:</p>
+    <!-- <p>However, if I add a <code>--all-match</code>, I get the results I'm
+    looking for:</p> -->
+
+<pre>
+<b>$ git log --grep="p4 depo" --format="%h %an %s" --author="Hausmann" --all-match</b>
+1cd5738 Simon Hausmann Make incremental imports easier to use by storing the p4 d
+</pre>
+
+    <h4>
+      git log -S
+      <small>filtrar por diferencia introducida</small>
+      <!-- <small>filter by introduced diff</small> -->
+    </h4>
+
+    <p>
+      ¿Qué ocurre si escribes mensajes de commits realmente horribles? O, ¿Qué ocurre 
+      si estás buscando cuándo se introdujo una función, o donde una variable comenzó
+      a ser usada? Puedes decirle también a Git que busque a través de de las diferencias 
+      de cada commit por una cadena. Por ejemplo, si queremos encontrar qué commits
+      modificaron algo similar a el nombre de función "userformat_find_requirements",
+      ejecutaríamos algo como esto: (note que no hay "=" entre "-S" y lo que estes
+      buscando)
+      <!-- What if you write really horrible commit messages?  Or, what if you are
+      looking for when a function was introduced, or where variables started
+      to be used?  You can also tell Git to look through the diff of each
+      commit for a string.  For example, if we wanted to find which commits
+      modified anything that looked like the function name
+      'userformat_find_requirements', we would run this: (note there is no '='
+      between the '-S' and what you are searching for) -->
+    </p>
+
+<pre>
+<b>$ git log -Suserformat_find_requirements</b>
+<span class="yellow">commit 5b16360330822527eac1fa84131d185ff784c9fb</span>
+Author: Johannes Gilger
+Date:   Tue Apr 13 22:31:12 2010 +0200
+
+    pretty: Initialize notes if %N is used
+
+    When using git log --pretty='%N' without an explicit --show-notes, git
+    would segfault. This patches fixes this behaviour by loading the needed
+    notes datastructures if --pretty is used and the format contains %N.
+    When --pretty='%N' is used together with --no-notes, %N won't be
+    expanded.
+
+    This is an extension to a proposed patch by Jeff King.
+
+    Signed-off-by: Johannes Gilger
+    Signed-off-by: Junio C Hamano
+</pre>
+
+    <h4>
+      git log -p
+      <!-- TODO: Complete -->
+      <small></small>
+      <!-- <small>show patch introduced at each commit</small> -->
+    </h4>
+
+    <p>
+    <!-- TODO: Complete -->
+    Cada commit es una instantánea del proyecto, pero desde ca
+    <!-- Each commit is a snapshot of the project, but since each commit records the
+    snapshot it was based off of, Git can always calculate the difference and
+    show it to you as a patch.  That means for any commit you can get the patch
+    that commit introduced to the project.  You can either do this by running
+    <code>git show [SHA]</code> with a specific commit SHA, or you can run
+    <code>git log -p</code>, which tells Git to put the patch after each commit.
+    It is a great way to summarize what has happened on a branch or between
+    commits. -->
+    </p>
+
+<pre>
+<b>$ git log -p --no-merges -2</b>
+<span class="yellow">commit 594f90bdee4faf063ad07a4a6f503fdead3ef606</span>
+Author: Scott Chacon schacon@gmail.com
+Date:   Fri Jun 4 15:46:55 2010 +0200
+
+    reverted to old class name
+
+<span class="umber">diff --git a/ruby.rb b/ruby.rb
+index bb86f00..192151c 100644
+--- a/ruby.rb
++++ b/ruby.rb</span>
+<span class="lblue">@@ -1,7 +1,7 @@</span>
+<span class="red">-class HiWorld</span>
+<span class="green">+class HelloWorld</span>
+   def self.hello
+     puts "Hello World from Ruby"
+   end
+ end
+
+<span class="red">-HiWorld.hello</span>
+<span class="green">+HelloWorld.hello</span>
+
+<span class="yellow">commit 3cbb6aae5c0cbd711c098e113ae436801371c95e</span>
+Author: Scott Chacon schacon@gmail.com
+Date:   Fri Jun 4 12:58:53 2010 +0200
+
+    fixed readme title differently
+
+<span class="umber">diff --git a/README b/README
+index d053cc8..9103e27 100644
+--- a/README
++++ b/README</span>
+<span class="lblue">@@ -1,4 +1,4 @@</span>
+<span class="red">-Hello World Examples</span>
+<span class="green">+Many Hello World Examples</span>
+ ======================
+
+ This project has examples of hello world in
+</pre>
+
+    <p>Esta es una forma realmente buena de resumir cambios o revisar una serie de
+    commits antes de unirlos o liberar algo.</p>
+    <!-- <p>This is a really nice way of summarizing changes or reviewing a series
+    of commits before merging them or releasing something.</p> -->
+
+    <h4>
+      git log --stat
+      <small>muestra diffstat de los cambios introducidos en cada commit</small>
+      <!-- <small>show diffstat of changes introduced at each commit</small> -->
+    </h4>
+
+    <p>Si la opción <code>-p</code> es demasiado detallada para ti, puedes resumir los
+    cambios con <code>--stat</code> en su lugar. Aquí está el mismo registro de salida
+    pero con <code>--stat</code> en lugar de <code>-p</code>.</p>
+    <!-- <p>If the <code>-p</code> option is too verbose for you, you can summarize
+    the changes with <code>--stat</code> instead. Here is the same log output
+    with <code>--stat</code> instead of <code>-p</code></p> -->
+
+<pre>
+<b>$ git log --stat --no-merges -2</b>
+<span class="yellow">commit 594f90bdee4faf063ad07a4a6f503fdead3ef606</span>
+Author: Scott Chacon schacon@gmail.com
+Date:   Fri Jun 4 15:46:55 2010 +0200
+
+    reverted to old class name
+
+ ruby.rb |    4 <span class="green">++</span><span class="red">--</span>
+ 1 files changed, 2 insertions(+), 2 deletions(-)
+
+<span class="yellow">commit 3cbb6aae5c0cbd711c098e113ae436801371c95e</span>
+Author: Scott Chacon schacon@gmail.com
+Date:   Fri Jun 4 12:58:53 2010 +0200
+
+    fixed readme title differently
+
+ README |    2 <span class="green">+</span><span class="red">-</span>
+ 1 files changed, 1 insertions(+), 1 deletions(-)
+</pre>
+
+    <p>La mima información básica, pero un poco más compacta - todavía te deja ver
+    cambios relativos y qué ficheros han sido modificados.</p>    
+    <!-- <p>Same basic information, but a little more compact - it still lets you
+    see relative changes and which files were modified.</p> -->
+
+  </div>
+</div>
+
+<div class="box">
+  <h2>
+    <span class="docs">
+      <a target="new" href="http://www.kernel.org/pub/software/scm/git/docs/git-diff.html">documentación</a> &nbsp;
+      <a target="new" href="http://progit.org/book/ch5-3.html#determining_what_is_introduced">libro</a>
+      <!-- <a target="new" href="http://www.kernel.org/pub/software/scm/git/docs/git-diff.html">docs</a> &nbsp;
+      <a target="new" href="http://progit.org/book/ch5-3.html#determining_what_is_introduced">book</a> -->
+    </span>
+    <a name="diff">git diff</a>
+    <span class="desc"></span>
+  </h2>
+
+  <div class="block">
+
+    <!-- TODO: Review "commit snapshots"=="instáneas commiteadas" -->
+    <!-- TODO: Review "history"=="historia" -->
+    Finalmente, para ver los cambios absolutos entre dos instantáneas commiteadas
+    cualquieras puedes usar el comando <code>git diff</code>. Esto es ampliamente
+    usado principalmente en dos situaciones - ver cómo dos ramas difieren la una
+    de la otra y ver que ha cambiado desde una liberación o algún otro punto anterior
+    en la historia. Veamos ambas situaciones.</p>
+    <!--<p>Finally, to see the absolute changes between any two commit snapshots,
+    you can use the <code>git diff</code> command. This is largely used in two
+    main situations - seeing how two branches differ from one another and
+    seeing what has changed since a release or some other older point in
+    history.  Let's look at both of these situations.</p> -->
+
+    <p>Para ver lo que ha cambiado desde la última liberación, puedes simplemente
+    ejecutar <code>git diff [version]</code> (o como quiera que hayas etiquetado
+    la liberación). Por ejemplo, si queremos ver que ha cambiado in nuestro
+    proyecto desde la liberación v0.9, podemos ejecutar <code>git diff v0.9</code>.
+    </p>
+    <!-- <p>To see what has changed since the last release, you can simply run
+    <code>git diff [version]</code> (or whatever you tagged the release).
+    For example, if we want to see what has changed in our project since
+    the v0.9 release, we can run <code>git diff v0.9</code>.
+    </p> -->
+
+<pre>
+<b>$ git diff v0.9</b>
+<span class="umber">diff --git a/README b/README
+index d053cc8..d4173d5 100644
+--- a/README
++++ b/README</span>
+<span class="lblue">@@ -1,4 +1,4 @@</span>
+<span class="red">-Hello World Examples</span>
+<span class="green">+Many Hello World Lang Examples</span>
+ ======================
+
+ This project has examples of hello world in
+<span class="umber">diff --git a/ruby.rb b/ruby.rb
+index bb86f00..192151c 100644
+--- a/ruby.rb
++++ b/ruby.rb</span>
+<span class="lblue">@@ -1,7 +1,7 @@</span>
+<span class="red">-class HiWorld</span>
+<span class="green">+class HelloWorld</span>
+   def self.hello
+     puts "Hello World from Ruby"
+   end
+ end
+
+<span class="red">-HiWorld.hello</span>
+<span class="green">+HelloWorld.hello</span>
+</pre>
+
+    <p>Como con <code>git log</code>, puedes usar la opción <code>--stat</code>
+    con esto.</p>
+    <!-- <p>Just like <code>git log</code>, you can use the <code>--stat</code>
+      option with it.</p> -->
+
+<pre>
+<b>$ git diff v0.9 --stat</b>
+ README  |    2 +-
+ ruby.rb |    4 ++--
+ 2 files changed, 3 insertions(+), 3 deletions(-)
+</pre>
+    <!-- TODO: Review "history"=="historia" -->
+    <p>Para comparar dos ramas divergentes, sin embargo, puedes ejecutar algo como
+    <code>git diff branchA branchB</code> pero el problema es que eso hará exactamente
+    lo que estás pidiendo - basicamente te dará un fichero de parche que convertiría
+    la última instantánea de la rama branchA en una instantánea al final de la rama
+    branchB. Esto significa que si ambas ramas han divergido- han ido en direcciones
+    diferentes - borrará todo el trabajo que se introdujo en la rama branchA y entonces
+    añadirá todo lo que fue introducido en la rama branchB. Esto probablemente no es lo
+    que tu quieres - tu quieres añadir los cambios de la rama branchB que no están
+    en la rama branchA, por lo que realmente quieres son las diferencias entre donde
+    ambas ramas divergieron y el final de la rama branchB. Por lo tanto, si tu
+    historia tiene el siguiente aspecto:</p>
+    <!-- <p>To compare two divergant branches, however, you can run something like
+    <code>git diff branchA branchB</code> but the problem is that it will do
+    exactly what you are asking - it will basically give you a patch file that
+    would turn the snapshot at the tip of branchA into the snapshot at the tip
+    of branchB.  This means if the two branches have diverged - gone in different
+    directions - it will remove all the work that was introduced into branchA
+    and then add everything that was introduced into branchB.  This is probably
+    not what you want - you want the changes added to branchB that are not in
+    branchA, so you really want the difference between where the two branches
+    diverged and the tip of branchB. So, if our history looks like this:</p> -->
+
+<pre>
+<b>$ git log --graph --oneline --decorate --all</b>
+* 594f90b (HEAD, tag: v1.0, master) reverted to old class name
+| * 1834130 (erlang) added haskell
+| * ab5ab4c added erlang
+|/
+*   8d585ea Merge branch 'fix_readme'
+...
+</pre>
+    <p>Y nosotros queremos ver que hay en la rama "erlang" comparado con la rama
+    "master", ejecutando <code>git diff master erlang</code> obtendremos algo erróneo.</p>
+    <!-- <p>And we want to see what is on the "erlang" branch compared to the "master"
+    branch, running <code>git diff master erlang</code> will give us the wrong
+    thing.</p> -->
+
+<pre>
+<b>$ git diff --stat master erlang</b>
+ erlang_hw.erl |    5 +++++
+ haskell.hs    |    4 ++++
+ ruby.rb       |    4 ++--
+ 3 files changed, 11 insertions(+), 2 deletions(-)
+</pre>
+
+    <p>Puedes ver que eso añade los ficheros de erlang y haskell, lo es lo que añadimos
+    en la rama, pero entonces la salida también revierte los cambios en el archivo
+    de ruby que teniamos en la rama master. Lo que realmente queremos ver es únicamente
+    los cambios que ocurrieron en la rama "erlang" (incluyendo los dos archivos). Podemos
+    obtener el resultado deseado haciendo el diff del commit común a partir del cual
+    divergieron:</p>
+    <!-- <p>You see that it adds the erlang and haskell files, which is what we did
+    in that branch, but then the output also reverts the changes to the ruby file
+    that we did in the master branch.  What we really want to see is just the
+    changes that happened in the "erlang" branch (adding the two files).  We can
+    get the desired result by doing the diff from the common commit they diverged
+    from:</p> -->
+
+<pre>
+<b>$ git diff --stat 8d585ea erlang</b>
+ erlang_hw.erl |    5 +++++
+ haskell.hs    |    4 ++++
+ 2 files changed, 9 insertions(+), 0 deletions(-)
+</pre>
+
+    <!-- TODO: Check "off of that"=="desde ahi" -->
+    Eso es lo que estamos buscando, pero nosotros no queremos tener que averiguar
+    desde qué commit ambas ramas divergieron cada vez. Afortunadamente, Git dispone
+    de un atajo para esto. Si ejecutas <code>git diff master...erlang</code> (con
+    tres puntos entre los nombres de las ramas), Git automáticamente averiguará cuál
+    es el commit común (también conocido como "merge base") de los dos commits y hará
+    el diff desde ahi.
+    <!-- <p>That's what we're looking for, but we don't want to have to figure out
+    what commit the two branches diverged from every time. Luckily, Git has a
+    shortcut for this. If you run <code>git diff master...erlang</code> (with
+    three dots in between the branch names), Git will automatically figure out
+    what the common commit (otherwise known as the "merge base") of the two
+    commit is and do the diff off of that.</p> -->
+
+<pre>
+<b>$ git diff --stat master erlang</b>
+ erlang_hw.erl |    5 +++++
+ haskell.hs    |    4 ++++
+ ruby.rb       |    4 ++--
+ 3 files changed, 11 insertions(+), 2 deletions(-)
+<b>$ git diff --stat master...erlang</b>
+ erlang_hw.erl |    5 +++++
+ haskell.hs    |    4 ++++
+ 2 files changed, 9 insertions(+), 0 deletions(-)
+</pre>
+
+    <p>Casi cada vez que compares dos ramas, querrás usar la sintaxis con triple punto,
+    porque ella te dará casi siempre lo que quieres.</p>
+    <!-- <p>Nearly every time you want to compare two branches, you'll want to use
+    the triple-dot syntax, because it will almost always give you what you want.
+    </p> -->
+
+    <!-- TODO: Translate this -->
+    <!-- <p>As a bit of an aside, you can also have git manually calculate the
+    merge-base (first common ancestor commit) of any two commits would be with
+    the <code>git merge-base</code> command:</p> -->
+
+<pre>
+<b>$ git merge-base master erlang</b>
+8d585ea6faf99facd39b55d6f6a3b3f481ad0d3d
+</pre>
+
+    <p>Por lo que puedes hacer el equivalente de <code>git diff master...erlang</code> 
+    mediante la ejecución de esto:</p>
+    <!-- <p>So, you can do the equivalent of <code>git diff master...erlang</code>
+    by running this:</p> -->
+
+<pre>
+<b>$ git diff --stat $(git merge-base master erlang) erlang</b>
+ erlang_hw.erl |    5 +++++
+ haskell.hs    |    4 ++++
+ 2 files changed, 9 insertions(+), 0 deletions(-)
+</pre>
+
+    <p>Sin embargo, yo por supuesto recomendaría usar la sintaxis más sencilla</p>
+    <!-- <p>I would of course recommend using the easier syntax, though.</p> -->
+
+
+    <p class="nutshell">
+    <b>En resumen</b> puedes usar <code>git diff</code> para ver cómo un proyecto
+    ha cambiado desde un punto conocido en el pasado o ver qué trabajo único hay en
+    una rama desde que divergió de otra. Usa siempre <code>git diff branchA...branchB</code>
+    para hacer las cosas más fáciles para inspeccionar la rama branchB con respecto a la rama
+    branchA.
+    <!-- <b>In a nutshell</b> you can use <code>git diff</code> to see how a project
+    has changed since a known point in the past or to see what unique work is
+    in one branch since it diverged from another.  Always use
+    <code>git diff branchA...branchB</code> to inspect branchB relative to
+    branchA to make things easier. -->
+    </p>
+
+  </div>
+</div>
+
+<p>¡Y eso es todo! Para más información, trata de leer el
+<!-- <p>And that's it!  For more information, try reading the -->
+<a href="http://progit.org">libro Pro Git</a>.</p>
+<!-- <a href="http://progit.org">Pro Git book</a>.</p> -->
